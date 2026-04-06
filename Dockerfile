@@ -7,8 +7,8 @@ WORKDIR /app
 # 3. 运送后勤清单
 COPY requirements.txt .
 
-# 4. 组装零件（使用清华源加速）
-RUN pip install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+# 使用阿里云镜像源，它的稳定性在某些地区比清华源更好
+RUN pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
 
 # 5. 运送核心武器
 COPY . .
