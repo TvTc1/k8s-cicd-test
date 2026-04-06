@@ -1,0 +1,33 @@
+name: K8s 自动化部署流水线 (V3 突击)
+
+# 触发条件：当你向 main 或 master 分支推送代码时，立刻开火！
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  k8s-deployment:
+    # 🔴 核心指令：这里绝对不能写 ubuntu-latest，必须写 self-hosted！
+    # 这句话的意思是：“不要用 GitHub 云端的机器，去呼叫我刚刚在 ymyw-70 虚拟机里安插的那个通讯兵！”
+    runs-on: self-hosted
+
+    steps:
+      - name: 1. 检出最新代码 (获取图纸)
+        uses: actions/checkout@v4
+
+      - name: 2. 制造 V3 弹药 (打包 Docker 镜像)
+        run: |
+          echo ">>> 老兵指令：开始流水线作业，打包 V3 镜像！"
+          docker build -t fastapi-app:v3 .
+          echo ">>> V3 镜像打包完毕！"
+
+      - name: 3. 前线火力覆盖 (滚动更新 K8s)
+        run: |
+          echo ">>> 老兵指令：正在向 K8s 集群下发无宕机滚动更新指令！"
+          kubectl set image deployment/fastapi-backend fastapi-container=fastapi-app:v3
+          
+          echo ">>> 盯紧前线，等待新兵完全替换老兵..."
+          kubectl rollout status deployment/fastapi-backend
+          echo ">>> 部署大捷！"
