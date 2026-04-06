@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-backend
+spec:
+  replicas: 1 # 咱们先要 1 个兵，稳扎稳打
+  selector:
+    matchLabels:
+      app: fastapi-app
+  template:
+    metadata:
+      labels:
+        app: fastapi-app
+    spec:
+      # 🔴 关键点 1：强制新兵留在 70 号机器，因为那里有镜像！
+      nodeName: ymyw-70 
+      containers:
+      - name: fastapi-container
+        image: fastapi-app:v4
+        # 🔴 关键点 2：告诉 K8s，如果本地有镜像就直接用，别去网上乱跑！
+        imagePullPolicy: IfNotPresent 
+        ports:
+        - containerPort: 8000
