@@ -8,7 +8,11 @@ WORKDIR /app
 COPY requirements.txt .
 
 # 使用阿里云镜像源，它的稳定性在某些地区比清华源更好
-RUN pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
+# 尝试使用阿里云镜像源，并增加超时等待，防止网络波动
+RUN pip install --no-cache-dir \
+    -i https://mirrors.aliyun.com/pypi/simple/ \
+    --trusted-host mirrors.aliyun.com \
+    fastapi uvicorn
 
 # 5. 运送核心武器
 COPY . .
