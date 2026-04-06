@@ -23,11 +23,6 @@ jobs:
           docker build -t fastapi-app:v4 .
           echo ">>> V4 镜像打包完毕！"
 
-      - name: 3. 前线火力覆盖 (滚动更新 K8s)
+      - name: 最终决战：使用蓝图下发部署
         run: |
-          echo ">>> 老兵指令：正在向 K8s 集群下发无宕机滚动更新指令！"
-          kubectl set image deployment/fastapi-backend fastapi-container=fastapi-app:v3
-          
-          echo ">>> 盯紧前线，等待新兵完全替换老兵..."
-          kubectl rollout status deployment/fastapi-backend
-          echo ">>> 部署大捷！"
+    # 这一行指令会根据 deployment.yaml 的内容，自动去 ymyw-70 部署 V4 新兵
